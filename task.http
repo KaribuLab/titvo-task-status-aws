@@ -1,0 +1,12 @@
+# Run task
+
+@apiKey = {{$dotenv API_KEY}}
+@scanId = {{$dotenv SCAN_ID}}
+
+POST {{apiUrl}}/scan-status
+Content-Type: application/json
+X-API-Key: {{apiKey}}
+
+{
+  "scan_id": "{{scanId}}"
+}
