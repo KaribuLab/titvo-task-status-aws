@@ -7,6 +7,7 @@ import { ParameterService } from '@shared'
 import { HttpStatus, INestApplicationContext, Logger as NestLogger } from '@nestjs/common'
 import { TaskStatusInputDto } from './task-status/task-status.dto'
 import { ApiKeyNotFoundError, NoAuthorizedApiKeyError, NotFoundError, ScanIdNotFoundError } from './task-status/task-status.error'
+import { TaskStatus } from './task/task.document'
 
 const logger = new NestLogger('TaskStatusHandler')
 
@@ -34,41 +35,67 @@ export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEv
   try {
     logger.log(`Processing task status for scan ID: ${input.scanId}`)
     const output = await taskStatusService.process(input)
+    const responseBody: {
+      status: TaskStatus
+      updated_at: string
+      issue_url?: string
+    } = {
+      status: output.status,
+      updated_at: output.updatedAt
+    }
+    if (output.issueUrl !== undefined) {
+      responseBody.issue_url = output.issueUrl
+    }
     return {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       statusCode: HttpStatus.OK,
-      body: JSON.stringify({
-        status: output.status,
-        updated_at: output.updatedAt
-      })
+      body: JSON.stringify(responseBody)
     }
   } catch (error) {
     logger.error(`Error processing task status for scan ID: ${input.scanId}`)
     logger.error(error)
     if (error instanceof ApiKeyNotFoundError) {
       return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
         statusCode: HttpStatus.UNAUTHORIZED,
         body: JSON.stringify({ message: error.message })
       }
     }
     if (error instanceof NoAuthorizedApiKeyError) {
       return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
         statusCode: HttpStatus.UNAUTHORIZED,
         body: JSON.stringify({ message: error.message })
       }
     }
     if (error instanceof ScanIdNotFoundError) {
       return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
         statusCode: HttpStatus.BAD_REQUEST,
         body: JSON.stringify({ message: error.message })
       }
     }
     if (error instanceof NotFoundError) {
       return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
         statusCode: HttpStatus.NOT_FOUND,
         body: JSON.stringify({ message: error.message })
       }
     }
     return {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       body: JSON.stringify(error)
     }

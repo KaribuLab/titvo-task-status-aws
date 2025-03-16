@@ -25,7 +25,8 @@ export class TaskStatusService {
     }
     return {
       status: document.status,
-      updatedAt: document.updatedAt
+      updatedAt: document.updatedAt,
+      issueUrl: document.issueUrl
     }
   }
 }

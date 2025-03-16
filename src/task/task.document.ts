@@ -12,4 +12,5 @@ export interface TaskDocument {
   createdAt: string
   updatedAt: string
   ttl: number
+  issueUrl?: string
 }

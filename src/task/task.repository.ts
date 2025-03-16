@@ -34,7 +34,8 @@ export class TaskRepository {
         status: result.Item.status.S as TaskStatus,
         createdAt: result.Item.created_at.S as string,
         updatedAt: result.Item.updated_at.S as string,
-        ttl: parseInt(result.Item.ttl.N as string)
+        ttl: parseInt(result.Item.ttl.N as string),
+        issueUrl: result.Item.issue_url?.S
       }
     }
     return null

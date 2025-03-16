@@ -8,6 +8,7 @@ class TaskStatusInput {
 class TaskStatusOutput {
   status: TaskStatus
   updatedAt: string
+  issueUrl?: string
 }
 
 export { TaskStatusInput as TaskStatusInputDto, TaskStatusOutput as TaskStatusOutputDto }
