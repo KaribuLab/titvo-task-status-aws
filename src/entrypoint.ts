@@ -36,10 +36,12 @@ export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEv
     logger.log(`Processing task status for scan ID: ${input.scanId}`)
     const output = await taskStatusService.process(input)
     const responseBody: {
+      scan_id: string
       status: TaskStatus
       updated_at: string
       issue_url?: string
     } = {
+      scan_id: input.scanId,
       status: output.status,
       updated_at: output.updatedAt
     }
