@@ -38,13 +38,13 @@ export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEv
     const responseBody: {
       status: TaskStatus
       updated_at: string
-      issue_url?: string
+      result?: Record<string, string>
     } = {
       status: output.status,
       updated_at: output.updatedAt
     }
-    if (output.issueUrl !== undefined) {
-      responseBody.issue_url = output.issueUrl
+    if (output.result !== undefined) {
+      responseBody.result = output.result
     }
     return {
       headers: {
