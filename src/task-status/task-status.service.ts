@@ -26,7 +26,7 @@ export class TaskStatusService {
     return {
       status: document.status,
       updatedAt: document.updatedAt,
-      issueUrl: document.issueUrl
+      result: document.result
     }
   }
 }
