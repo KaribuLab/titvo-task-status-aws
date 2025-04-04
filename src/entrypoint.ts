@@ -6,8 +6,9 @@ import { Logger } from 'nestjs-pino'
 import { ParameterService } from '@shared'
 import { HttpStatus, INestApplicationContext, Logger as NestLogger } from '@nestjs/common'
 import { TaskStatusInputDto } from './task-status/task-status.dto'
-import { ApiKeyNotFoundError, NoAuthorizedApiKeyError, NotFoundError, ScanIdNotFoundError } from './task-status/task-status.error'
+import { ScanIdNotFoundError, TaskNotFoundError } from './task-status/task-status.error'
 import { TaskStatus } from './task/task.document'
+import { NoAuthorizedApiKeyError, ApiKeyNotFoundError } from './auth/auth.error'
 
 const logger = new NestLogger('TaskStatusHandler')
 
@@ -83,7 +84,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEv
         body: JSON.stringify({ message: error.message })
       }
     }
-    if (error instanceof NotFoundError) {
+    if (error instanceof TaskNotFoundError) {
       return {
         headers: {
           'Content-Type': 'application/json'
