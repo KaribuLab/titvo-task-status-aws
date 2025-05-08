@@ -49,8 +49,8 @@ export class DynamoTaskRepository extends TaskRepository {
       args: ((result.Item.args?.M) != null)
         ? Object.fromEntries(Object.entries(result.Item.args.M).map(([key, value]) => [key, value.S as string]))
         : {},
-      result: ((result.Item.result?.M) != null)
-        ? Object.fromEntries(Object.entries(result.Item.result.M).map(([key, value]) => [key, value.S as string]))
+      result: ((result.Item.scan_result?.M) != null)
+        ? Object.fromEntries(Object.entries(result.Item.scan_result.M).map(([key, value]) => [key, value.S as string]))
         : {},
       status: result.Item.status.S as TaskStatus,
       createdAt: result.Item.created_at.S as string,
