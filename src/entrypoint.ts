@@ -3,7 +3,7 @@ import { Context, APIGatewayProxyHandlerV2, APIGatewayProxyCallbackV2, APIGatewa
 import { TaskStatusService } from './task-status/task-status.service'
 import { AppModule } from './app.module'
 import { Logger } from 'nestjs-pino'
-import { ParameterService } from '@shared'
+import { ParameterService } from '@titvo/aws'
 import { HttpStatus, INestApplicationContext, Logger as NestLogger } from '@nestjs/common'
 import { TaskStatusInputDto } from './task-status/task-status.dto'
 import { ScanIdNotFoundError, TaskNotFoundError } from './task-status/task-status.error'
