@@ -32,6 +32,8 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
+    "@titvo/aws": "file:shared",
+    "@titvo/shared": "file:lib/shared",
     "@aws-sdk/client-batch": "3.726.1",
     "@aws-sdk/client-dynamodb": "3.670.0",
     "@aws-sdk/client-lambda": "3.682.0",

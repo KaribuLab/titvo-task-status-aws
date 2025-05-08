@@ -3,7 +3,7 @@ import { TaskStatusService } from './task-status.service'
 import { LoggerModule } from 'nestjs-pino'
 import { pino } from 'pino'
 import { createTaskRepository, TaskRepository } from '../task/task.repository'
-import { ParameterService } from '@shared'
+import { ParameterService } from '@titvo/aws'
 import { ApiKeyRepository, createApiKeyRepository } from '../api-key/api-key.repository'
 import { AuthService } from '../auth/auth.service'
 

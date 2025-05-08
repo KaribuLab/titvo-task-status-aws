@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { ParameterModule } from '@shared'
 import { TaskStatusModule } from './task-status/task-status.module'
+import { ParameterModule } from '../shared/src/parameter/parameter.module'
 
 @Module({
   imports: [

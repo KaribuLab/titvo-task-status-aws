@@ -7,8 +7,11 @@
     "rootDir": "./",
     "moduleResolution": "Node",
     "paths": {
-      "@shared": [
-        "./shared/src/index.ts"
+      "@shared/*": [
+        "./lib/shared/src/*"
+      ],
+      "@aws/*": [
+        "./shared/src/*"
       ]
     },
     "outDir": "./build",
@@ -21,6 +24,7 @@
   "include": [
     "src/**/*.ts",
     "shared/**/*.ts",
+    "lib/shared/**/*.ts",
     "test/**/*.ts"
   ],
   "exclude": [

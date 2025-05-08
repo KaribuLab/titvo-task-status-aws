@@ -1,3 +1,6 @@
 [submodule "shared"]
 	path = shared
 	url = git@github.com:KaribuLab/titvo-lambda-shared.git
+[submodule "lib/shared"]
+	path = lib/shared
+	url = git@github.com:KaribuLab/titvo-shared.git
