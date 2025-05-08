@@ -11,7 +11,6 @@ export interface TaskDocument {
   status: TaskStatus
   createdAt: string
   updatedAt: string
-  ttl: number
   result: {
     [key: string]: string
   }

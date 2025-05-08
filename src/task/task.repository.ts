@@ -17,8 +17,7 @@ export class TaskRepository {
         scan_id: { S: document.scanId },
         status: { S: document.status },
         created_at: { S: document.createdAt },
-        updated_at: { S: document.updatedAt },
-        ttl: { N: document.ttl.toString() }
+        updated_at: { S: document.updatedAt }
       }
     }))
   }
@@ -34,7 +33,6 @@ export class TaskRepository {
         status: result.Item.status.S as TaskStatus,
         createdAt: result.Item.created_at.S as string,
         updatedAt: result.Item.updated_at.S as string,
-        ttl: parseInt(result.Item.ttl.N as string),
         result: result.Item.scan_result?.M === undefined ? {} : Object.fromEntries(Object.entries(result.Item.scan_result?.M).map(([key, value]) => [key, value.S as string])) as Record<string, string>
       }
     }
