@@ -1,19 +1,28 @@
 import { Module } from '@nestjs/common'
-import { TaskStatusModule } from './task-status/task-status.module'
-import { ParameterModule } from '../shared/src/parameter/parameter.module'
-
+import { TaskModule } from '@infrastructure/task/task.module'
+import { ConfigModule } from '@titvo/aws'
+import { LoggerModule } from 'nestjs-pino'
+import { pino } from 'pino'
 @Module({
   imports: [
-    TaskStatusModule,
-    ParameterModule.forRoot({
-      parameterServiceOptions: {
-        ttl: 60,
-        awsEndpoint: process.env.AWS_ENDPOINT ?? 'http://localhost:4566',
+    TaskModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.LOG_LEVEL ?? 'info',
+        timestamp: pino.stdTimeFunctions.isoTime,
+        formatters: {
+          level (label: string): { level: string } {
+            return { level: label }
+          }
+        }
+      }
+    }),
+    ConfigModule.forRoot({
+      configOptions: {
         awsStage: process.env.AWS_STAGE ?? 'prod',
-        parameterBasePath: '/tvo/security-scan',
-        serviceName: 'task-status'
-      },
-      isGlobal: true
+        awsEndpoint: process.env.AWS_ENDPOINT ?? 'http://localhost:4566',
+        tableName: process.env.CONFIG_TABLE_NAME as string
+      }
     })
   ]
 })

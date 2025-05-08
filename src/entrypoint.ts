@@ -1,15 +1,11 @@
 import { NestFactory } from '@nestjs/core'
 import { Context, APIGatewayProxyHandlerV2, APIGatewayProxyCallbackV2, APIGatewayProxyResultV2, APIGatewayProxyEventV2 } from 'aws-lambda'
-import { TaskStatusService } from './task-status/task-status.service'
 import { AppModule } from './app.module'
 import { Logger } from 'nestjs-pino'
-import { ParameterService } from '@titvo/aws'
 import { HttpStatus, INestApplicationContext, Logger as NestLogger } from '@nestjs/common'
-import { TaskStatusInputDto } from './task-status/task-status.dto'
-import { ScanIdNotFoundError, TaskNotFoundError } from './task-status/task-status.error'
-import { TaskStatus } from './task/task.document'
-import { NoAuthorizedApiKeyError, ApiKeyNotFoundError } from './auth/auth.error'
-
+import { TaskStatus } from '@trigger/core/task/task.entity'
+import { GetTaskStatusUseCase, GetTaskStatusInputDto, TaskNotFoundError, ScanIdNotFoundError } from '@titvo/trigger'
+import { NoAuthorizedApiKeyError, ApiKeyNotFoundError } from '@titvo/auth'
 const logger = new NestLogger('TaskStatusHandler')
 
 async function initApp (): Promise<INestApplicationContext> {
@@ -23,19 +19,18 @@ async function initApp (): Promise<INestApplicationContext> {
 }
 
 const app = await initApp()
-app.get(ParameterService)
-const taskStatusService = app.get(TaskStatusService)
+const getTaskStatusUseCase = app.get(GetTaskStatusUseCase)
 
 export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEventV2, context: Context, callback: APIGatewayProxyCallbackV2): Promise<APIGatewayProxyResultV2> => {
   const headers = event.headers
   const body = JSON.parse(event.body as string)
-  const input: TaskStatusInputDto = {
+  const input: GetTaskStatusInputDto = {
     scanId: body.scan_id,
     apiKey: headers['x-api-key']
   }
   try {
     logger.log(`Processing task status for scan ID: ${input.scanId}`)
-    const output = await taskStatusService.process(input)
+    const output = await getTaskStatusUseCase.execute(input)
     const responseBody: {
       status: TaskStatus
       updated_at: string

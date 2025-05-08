@@ -2,9 +2,10 @@
   "name": "tvo-task-status",
   "version": "0.1.0",
   "main": "main.js",
-  "eslintConfig": {
-    "extends": [
-      "ts-standard"
+  "ts-standard": {
+    "ignore": [
+      "test/**",
+      "vitest.config.ts"
     ]
   },
   "scripts": {
@@ -16,7 +17,7 @@
     "AWS",
     "Nest"
   ],
-  "author": "Claro IVR <claro.ivr@karibu.cl>",
+  "author": "Patricio Ascencio <patricio.ascencio@karibu.cl>",
   "license": "UNLICENSED",
   "devDependencies": {
     "@rspack/cli": "1.2.5",
@@ -32,8 +33,10 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
-    "@titvo/aws": "file:shared",
-    "@titvo/shared": "file:lib/shared",
+    "@titvo/aws": "file:lib/aws",
+    "@titvo/shared": "file:shared",
+    "@titvo/trigger": "file:trigger",
+    "@titvo/auth": "file:auth",
     "@aws-sdk/client-batch": "3.726.1",
     "@aws-sdk/client-dynamodb": "3.670.0",
     "@aws-sdk/client-lambda": "3.682.0",

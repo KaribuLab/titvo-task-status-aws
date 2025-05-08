@@ -64,6 +64,15 @@ inputs = {
       {
         "Effect" : "Allow",
         "Action" : [
+          "dynamodb:GetItem",
+        ],
+        "Resource" : [
+          "${dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-configuration-table-arn"]}"
+        ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
           "dynamodb:Query"
         ],
         "Resource" : [
@@ -84,8 +93,10 @@ inputs = {
     ]
   })
   environment_variables = {
-    PARAMETER_BASE_PATH = local.serverless.locals.parameter_path
-    AWS_STAGE           = local.serverless.locals.stage
+    API_KEY_TABLE_NAME = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-api-key-table-name"]
+    TASK_TABLE_NAME    = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-task-table-name"]
+    CONFIG_TABLE_NAME  = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-configuration-table-name"]
+    AWS_STAGE          = local.serverless.locals.stage
   }
   runtime       = "nodejs20.x"
   handler       = "src/entrypoint.handler"
