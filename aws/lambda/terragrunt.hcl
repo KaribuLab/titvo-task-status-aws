@@ -24,8 +24,17 @@ dependency parameters {
   config_path = "${get_parent_terragrunt_dir()}/aws/parameter"
   mock_outputs = {
     parameters = {
-      "/tvo/security-scan/test/infra/dynamo-task-table-arn" = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-github-security-scan-task-table-test"
-      "/tvo/security-scan/prod/infra/dynamo-task-table-arn" = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-github-security-scan-task-table-prod"
+      "/tvo/security-scan/prod/infra/secret-manager-arn"              = "arn:aws:secretsmanager:us-east-1:000000000000:secret:/tvo/security-scan/prod"
+      "/tvo/security-scan/prod/infra/encryption-key-name"             = "tvo-github-security-scan-encryption-key-prod"
+      "/tvo/security-scan/prod/infra/dynamo-configuration-table-name" = "tvo-github-security-scan-configuration-table-prod"
+      "/tvo/security-scan/prod/infra/dynamo-cli-files-table-name"     = "tvo-github-security-scan-cli-files-table-prod"
+      "/tvo/security-scan/prod/infra/dynamo-api-key-table-name"       = "tvo-github-security-scan-api-key-table-prod"
+      "/tvo/security-scan/prod/infra/cli-bucket-name"                 = "tvo-github-security-scan-cli-bucket-prod"
+      "/tvo/security-scan/prod/infra/secret-manager-arn"              = "arn:aws:secretsmanager:us-east-1:000000000000:secret:/tvo/security-scan/prod"
+      "/tvo/security-scan/test/infra/dynamo-api-key-table-name"       = "tvo-github-security-scan-api-key-table-test"
+      "/tvo/security-scan/test/infra/dynamo-configuration-table-name" = "tvo-github-security-scan-configuration-table-test"
+      "/tvo/security-scan/test/infra/dynamo-cli-files-table-name"     = "tvo-github-security-scan-cli-files-table-test"
+      "/tvo/security-scan/test/infra/cli-bucket-name"                 = "tvo-github-security-scan-cli-bucket-test"
     }
   }
 }
@@ -89,14 +98,26 @@ inputs = {
           dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-cli-files-table-arn"],
           "${dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-cli-files-table-arn"]}/index/*"
         ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "secretsmanager:GetSecretValue"
+        ],
+        "Resource" : [
+          "${dependency.parameters.outputs.parameters["${local.base_path}/infra/secret-manager-arn"]}"
+        ]
       }
     ]
   })
   environment_variables = {
-    API_KEY_TABLE_NAME = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-api-key-table-name"]
-    TASK_TABLE_NAME    = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-task-table-name"]
-    CONFIG_TABLE_NAME  = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-configuration-table-name"]
-    AWS_STAGE          = local.serverless.locals.stage
+    API_KEY_TABLE_NAME  = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-api-key-table-name"]
+    TASK_TABLE_NAME     = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-task-table-name"]
+    CONFIG_TABLE_NAME   = dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo-configuration-table-name"]
+    ENCRYPTION_KEY_NAME = dependency.parameters.outputs.parameters["${local.base_path}/infra/encryption-key-name"]
+    NO_COLOR            = "true"
+    LOG_LEVEL           = "debug"
+    AWS_STAGE           = local.serverless.locals.stage
   }
   runtime       = "nodejs20.x"
   handler       = "src/entrypoint.handler"
