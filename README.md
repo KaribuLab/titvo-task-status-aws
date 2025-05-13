@@ -1,12 +1,8 @@
-# Proyecto Base IVR
+# Titvo Task Status API
 
-## Uso del Template
+## Descripción
 
-Para utilizar este template en un nuevo proyecto, ejecuta el siguiente comando:
-
-```shell
-kli project git@github.com:KaribuLab/titvo-base-lambda-apigateway.git
-```
+Este servicio proporciona una API para consultar el estado de tareas de escaneo. Permite a los usuarios verificar el estado actual de sus escaneos mediante un ID de escaneo y una clave API válida.
 
 ## Requisitos
 
@@ -22,20 +18,56 @@ kli project git@github.com:KaribuLab/titvo-base-lambda-apigateway.git
 
 ```shell
 .
-├── aws                  # Recursos de AWS
-│   ├── cloudwatch       # Configuración de CloudWatch
-│   ├── lambda           # Configuración de Lambda
-│   └── parameter        # Parámetros de AWS
+├── src                  # Código fuente de la aplicación
+│   ├── task-status      # Servicios y DTOs para consulta de estado
+│   ├── task             # Modelos y repositorio de tareas
+│   ├── infrastructure   # Implementaciones de repositorios
+│   ├── auth             # Servicios de autenticación
+│   └── app.module.ts    # Módulo principal de NestJS
+├── lib                  # Bibliotecas internas
+│   └── aws              # Utilidades para servicios AWS (S3, DynamoDB, etc.)
 ├── localstack           # Configuración para desarrollo local
-├── template             # Plantillas para el proyecto
+├── aws                  # Recursos de AWS
 ├── .vscode              # Configuración de VS Code
 ├── package.json         # Dependencias del proyecto
-├── serverless.hcl       # Configuración de Serverless
-├── terragrunt.hcl       # Configuración de Terragrunt
-├── tsconfig.json        # Configuración de TypeScript
-└── localstack.hcl       # Configuración adicional de LocalStack
+└── tsconfig.json        # Configuración de TypeScript
 ```
 
 ## Desarrollo Local
 
-Para el desarrollo local, se utiliza LocalStack. La configuración se encuentra en el archivo `localstack.hcl`.
+Para el desarrollo local, se utiliza LocalStack para simular los servicios de AWS como DynamoDB y S3.
+
+## API
+
+### Endpoint
+
+`POST /task-status`
+
+### Headers
+
+- `x-api-key`: Clave API para autenticación
+
+### Body
+
+```json
+{
+  "scan_id": "id-del-escaneo"
+}
+```
+
+### Respuesta
+
+```json
+{
+  "status": "COMPLETED|FAILED|PENDING",
+  "updated_at": "2023-11-15T12:34:56Z",
+  "result": {
+    "key1": "value1",
+    "key2": "value2"
+  }
+}
+```
+
+## Licencia
+
+Apache License 2.0
