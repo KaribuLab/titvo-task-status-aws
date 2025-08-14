@@ -1,4 +1,5 @@
 import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { Logger } from '@nestjs/common'
 import { TaskEntity, TaskRepository, TaskSource, TaskStatus } from '@titvo/trigger'
 
 export interface TaskRepositoryOptions {
@@ -8,6 +9,7 @@ export interface TaskRepositoryOptions {
 }
 
 export class DynamoTaskRepository extends TaskRepository {
+  private readonly logger = new Logger(DynamoTaskRepository.name)
   private readonly tableName: string
   private readonly dynamoDBClient: DynamoDBClient
 
@@ -42,6 +44,7 @@ export class DynamoTaskRepository extends TaskRepository {
     if (result.Item === undefined) {
       return null
     }
+    this.logger.debug(`Scan result: ${JSON.stringify(result.Item.scan_result.M)}`)
     return {
       id: result.Item.scan_id.S,
       source: result.Item.source.S as TaskSource,
