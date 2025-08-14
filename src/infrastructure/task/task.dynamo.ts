@@ -1,6 +1,7 @@
 import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import { Logger } from '@nestjs/common'
-import { TaskEntity, TaskRepository, TaskSource, TaskStatus } from '@titvo/trigger'
+import { TaskArgs, TaskEntity, TaskRepository, TaskResult, TaskSource, TaskStatus } from '@titvo/trigger'
 
 export interface TaskRepositoryOptions {
   tableName: string
@@ -20,44 +21,32 @@ export class DynamoTaskRepository extends TaskRepository {
   }
 
   async save (document: TaskEntity): Promise<void> {
+    const marshalledItem = marshall(document)
     await this.dynamoDBClient.send(new PutItemCommand({
       TableName: this.tableName,
-      Item: {
-        scan_id: { S: document.id as string },
-        source: { S: document.source },
-        repository_id: { S: document.repositoryId },
-        status: { S: document.status },
-        created_at: { S: document.createdAt },
-        updated_at: { S: document.updatedAt },
-        args: {
-          M: Object.fromEntries(Object.entries(document.args).map(([key, value]) => [key, { S: value }]))
-        }
-      }
+      Item: marshalledItem
     }))
   }
 
   async getById (scanId: string): Promise<TaskEntity | null> {
     const result = await this.dynamoDBClient.send(new GetItemCommand({
       TableName: this.tableName,
-      Key: { scan_id: { S: scanId } }
+      Key: marshall({ scan_id: scanId })
     }))
     if (result.Item === undefined) {
       return null
     }
-    this.logger.debug(`Scan result: ${JSON.stringify(result.Item.scan_result.M)}`)
+    const unmarshalledItem = unmarshall(result.Item)
+    this.logger.debug(`Scan result: ${JSON.stringify(unmarshalledItem.scan_result)}`)
     return {
-      id: result.Item.scan_id.S,
-      source: result.Item.source.S as TaskSource,
-      repositoryId: result.Item.repository_id.S as string,
-      args: ((result.Item.args?.M) != null)
-        ? Object.fromEntries(Object.entries(result.Item.args.M).map(([key, value]) => [key, value.S as string]))
-        : {},
-      result: ((result.Item.scan_result?.M) != null)
-        ? Object.fromEntries(Object.entries(result.Item.scan_result.M).map(([key, value]) => [key, value.S as string]))
-        : {},
-      status: result.Item.status.S as TaskStatus,
-      createdAt: result.Item.created_at.S as string,
-      updatedAt: result.Item.updated_at.S as string
+      id: unmarshalledItem.scan_id,
+      source: unmarshalledItem.source as TaskSource,
+      repositoryId: unmarshalledItem.repository_id,
+      args: unmarshalledItem.args as unknown as TaskArgs,
+      result: unmarshalledItem.scan_result as unknown as TaskResult,
+      status: unmarshalledItem.status as TaskStatus,
+      createdAt: unmarshalledItem.created_at,
+      updatedAt: unmarshalledItem.updated_at
     }
   }
 }
