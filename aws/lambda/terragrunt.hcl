@@ -24,17 +24,17 @@ dependency parameters {
   config_path = "${get_parent_terragrunt_dir()}/aws/parameter"
   mock_outputs = {
     parameters = {
-      "/tvo/security-scan/prod/infra/secret-manager-arn"              = "arn:aws:secretsmanager:us-east-1:000000000000:secret:/tvo/security-scan/prod"
-      "/tvo/security-scan/prod/infra/encryption-key-name"             = "tvo-github-security-scan-encryption-key-prod"
-      "/tvo/security-scan/prod/infra/dynamo-configuration-table-name" = "tvo-github-security-scan-configuration-table-prod"
-      "/tvo/security-scan/prod/infra/dynamo-cli-files-table-name"     = "tvo-github-security-scan-cli-files-table-prod"
-      "/tvo/security-scan/prod/infra/dynamo-api-key-table-name"       = "tvo-github-security-scan-api-key-table-prod"
-      "/tvo/security-scan/prod/infra/cli-bucket-name"                 = "tvo-github-security-scan-cli-bucket-prod"
-      "/tvo/security-scan/prod/infra/secret-manager-arn"              = "arn:aws:secretsmanager:us-east-1:000000000000:secret:/tvo/security-scan/prod"
-      "/tvo/security-scan/test/infra/dynamo-api-key-table-name"       = "tvo-github-security-scan-api-key-table-test"
-      "/tvo/security-scan/test/infra/dynamo-configuration-table-name" = "tvo-github-security-scan-configuration-table-test"
-      "/tvo/security-scan/test/infra/dynamo-cli-files-table-name"     = "tvo-github-security-scan-cli-files-table-test"
-      "/tvo/security-scan/test/infra/cli-bucket-name"                 = "tvo-github-security-scan-cli-bucket-test"
+      "${local.base_path}/infra/secret-manager-arn"              = "arn:aws:secretsmanager:us-east-1:000000000000:secret:${local.base_path}"
+      "${local.base_path}/infra/encryption-key-name"             = "tvo-task-status-encryption-key-prod"
+      "${local.base_path}/infra/dynamo-configuration-table-name" = "tvo-task-status-configuration-table-prod"
+      "${local.base_path}/infra/dynamo-configuration-table-arn"  = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-configuration-table-prod"
+      "${local.base_path}/infra/dynamo-cli-files-table-name"     = "tvo-task-status-cli-files-table-prod"
+      "${local.base_path}/infra/dynamo-cli-files-table-arn"      = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-cli-files-table-prod"
+      "${local.base_path}/infra/dynamo-api-key-table-name"       = "tvo-task-status-api-key-table-prod"
+      "${local.base_path}/infra/dynamo-api-key-table-arn"        = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-api-key-table-prod"
+      "${local.base_path}/infra/dynamo-task-table-name"          = "tvo-task-status-task-table-prod"
+      "${local.base_path}/infra/dynamo-task-table-arn"           = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-task-table-prod"
+      "${local.base_path}/infra/cli-bucket-name"                 = "tvo-task-status-cli-bucket-prod"
     }
   }
 }
