@@ -21,6 +21,6 @@ locals {
   tags_file_path   = "${get_terragrunt_dir()}/common_tags.json"
   log_retention    = 7
   common_tags = fileexists(local.tags_file_path) ? jsondecode(file(local.tags_file_path)) : {
-    Project = "Titvo Task Status"
+    Project = "Titvo"
   }
 }
