@@ -21,10 +21,19 @@ export class DynamoTaskRepository extends TaskRepository {
   }
 
   async save (document: TaskEntity): Promise<void> {
-    const marshalledItem = marshall(document)
     await this.dynamoDBClient.send(new PutItemCommand({
       TableName: this.tableName,
-      Item: marshalledItem
+      Item: marshall({
+        scan_id: document.id,
+        source: document.source,
+        repository_id: document.repositoryId,
+        job_id: document.jobId,
+        args: document.args,
+        result: document.result,
+        status: document.status,
+        created_at: document.createdAt,
+        updated_at: document.updatedAt
+      })
     }))
   }
 
@@ -42,6 +51,7 @@ export class DynamoTaskRepository extends TaskRepository {
       id: unmarshalledItem.scan_id,
       source: unmarshalledItem.source as TaskSource,
       repositoryId: unmarshalledItem.repository_id,
+      jobId: unmarshalledItem.job_id,
       args: unmarshalledItem.args as unknown as TaskArgs,
       result: unmarshalledItem.scan_result as unknown as TaskResult,
       status: unmarshalledItem.status as TaskStatus,

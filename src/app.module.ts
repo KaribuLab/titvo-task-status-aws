@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TaskModule } from '@infrastructure/task/task.module'
-import { ConfigModule, SecretModule } from '@titvo/aws'
+import { BatchModule, ConfigModule, SecretModule } from '@titvo/aws'
 import { LoggerModule } from 'nestjs-pino'
 import { pino } from 'pino'
 @Module({
@@ -26,6 +26,13 @@ import { pino } from 'pino'
     SecretModule.forRoot({
       awsStage: process.env.AWS_STAGE ?? 'prod',
       awsEndpoint: process.env.AWS_ENDPOINT ?? 'http://localhost:4566'
+    }),
+    BatchModule.forRoot({
+      batchServiceOptions: {
+        awsStage: process.env.AWS_STAGE ?? 'prod',
+        batchRunnerUrl: process.env.BATCH_RUNNER_URL ?? 'http://localhost:3001'
+      },
+      isGlobal: true
     }),
     TaskModule
   ]

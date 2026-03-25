@@ -68,7 +68,8 @@ inputs = {
       {
         "Effect" : "Allow",
         "Action" : [
-          "dynamodb:GetItem"
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
         ],
         "Resource" : "${dependency.parameters.outputs.parameters["${local.base_path}/infra/dynamo/task-table-arn"]}"
       },
@@ -115,10 +116,7 @@ inputs = {
         "Action" : [
           "batch:DescribeJobs"
         ],
-        "Resource" : [
-          "${dependency.parameters.outputs.parameters["${local.base_path}/infra/batch/agent/job_definition_arn"]}",
-          "${dependency.parameters.outputs.parameters["${local.base_path}/infra/batch/agent/job_queue_arn"]}"
-        ]
+        "Resource" : "*"
       },
     ]
   })
