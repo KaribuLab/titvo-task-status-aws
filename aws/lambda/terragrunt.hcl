@@ -24,17 +24,19 @@ dependency parameters {
   config_path = "${get_parent_terragrunt_dir()}/aws/parameter"
   mock_outputs = {
     parameters = {
-      "${local.base_path}/infra/secret/manager/arn"          = "arn:aws:secretsmanager:us-east-1:000000000000:secret:${local.base_path}"
-      "${local.base_path}/infra/kms/encryption-key-name"     = "tvo-task-status-encryption-key-prod"
-      "${local.base_path}/infra/dynamo/parameter-table-name" = "tvo-task-status-configuration-table-prod"
-      "${local.base_path}/infra/dynamo/parameter-table-arn"  = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-configuration-table-prod"
-      "${local.base_path}/infra/dynamo/cli-files-table-name" = "tvo-task-status-cli-files-table-prod"
-      "${local.base_path}/infra/dynamo/cli-files-table-arn"  = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-cli-files-table-prod"
-      "${local.base_path}/infra/dynamo/apikey-table-name"    = "tvo-task-status-api-key-table-prod"
-      "${local.base_path}/infra/dynamo/apikey-table-arn"     = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-api-key-table-prod"
-      "${local.base_path}/infra/dynamo/task-table-name"      = "tvo-task-status-task-table-prod"
-      "${local.base_path}/infra/dynamo/task-table-arn"       = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-task-table-prod"
-      "${local.base_path}/infra/cli-bucket-name"             = "tvo-task-status-cli-bucket-prod"
+      "${local.base_path}/infra/secret/manager/arn"             = "arn:aws:secretsmanager:us-east-1:000000000000:secret:${local.base_path}"
+      "${local.base_path}/infra/kms/encryption-key-name"        = "tvo-task-status-encryption-key-prod"
+      "${local.base_path}/infra/dynamo/parameter-table-name"    = "tvo-task-status-configuration-table-prod"
+      "${local.base_path}/infra/dynamo/parameter-table-arn"     = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-configuration-table-prod"
+      "${local.base_path}/infra/dynamo/cli-files-table-name"    = "tvo-task-status-cli-files-table-prod"
+      "${local.base_path}/infra/dynamo/cli-files-table-arn"     = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-cli-files-table-prod"
+      "${local.base_path}/infra/dynamo/apikey-table-name"       = "tvo-task-status-api-key-table-prod"
+      "${local.base_path}/infra/dynamo/apikey-table-arn"        = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-api-key-table-prod"
+      "${local.base_path}/infra/dynamo/task-table-name"         = "tvo-task-status-task-table-prod"
+      "${local.base_path}/infra/dynamo/task-table-arn"          = "arn:aws:dynamodb:us-east-1:000000000000:table/tvo-task-status-task-table-prod"
+      "${local.base_path}/infra/cli-bucket-name"                = "tvo-task-status-cli-bucket-prod"
+      "${local.base_path}/infra/batch/agent/job_definition_arn" = "arn:aws:batch:us-east-1:000000000000:job-definition/tvo-security-scan-batch-prod-job-definition"
+      "${local.base_path}/infra/batch/agent/job_queue_arn"      = "arn:aws:batch:us-east-1:000000000000:job-queue/tvo-security-scan-job-queue-prod"
     }
   }
 }
@@ -107,7 +109,17 @@ inputs = {
         "Resource" : [
           "${dependency.parameters.outputs.parameters["${local.base_path}/infra/secret/manager/arn"]}"
         ]
-      }
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "batch:DescribeJobs"
+        ],
+        "Resource" : [
+          "${dependency.parameters.outputs.parameters["${local.base_path}/infra/batch/agent/job_definition_arn"]}",
+          "${dependency.parameters.outputs.parameters["${local.base_path}/infra/batch/agent/job_queue_arn"]}"
+        ]
+      },
     ]
   })
   environment_variables = {
