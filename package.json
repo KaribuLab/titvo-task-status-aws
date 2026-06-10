@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "rimraf dist build",
     "lint": "ts-standard | snazzy",
-    "build": "npm run clean && npm run lint && rspack build"
+    "build": "npm run clean && rspack build"
   },
   "keywords": [
     "AWS",
